@@ -8,7 +8,7 @@
     "start": "node pareamento.js"
   },
   "engines": {
-    "node": ">=18"
+    "node": "22.x"
   },
   "dependencies": {
     "@innovatorssoft/baileys": "7.4.4",
