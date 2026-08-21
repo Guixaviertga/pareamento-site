@@ -1,0 +1,17 @@
+{
+  "name": "pareamento-whatsapp",
+  "version": "1.0.0",
+  "description": "Site simples pra gerar o codigo de pareamento do WhatsApp (baileys)",
+  "main": "pareamento.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node pareamento.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@innovatorssoft/baileys": "7.4.4",
+    "pino": "^9.3.2"
+  }
+}

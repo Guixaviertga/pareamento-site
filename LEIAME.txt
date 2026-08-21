@@ -1,0 +1,108 @@
+SITE DE PAREAMENTO - WhatsApp (baileys)
+=======================================
+
+Gera o codigo de pareamento pelo navegador, pra quando nao da pra usar o
+terminal interativo (celular, painel de hospedagem sem console, etc).
+Ele so CRIA a sessao; quem usa a sessao depois e o bot.
+
+
+INSTALAR
+--------
+  npm install
+
+
+USAR
+----
+  npm start
+  -> abre em http://localhost:3000
+
+  1) digite o numero com DDI (so numeros). Ex: 5565999999999
+  2) clique em "Gerar codigo"
+  3) no WhatsApp: Aparelhos conectados > Conectar um aparelho >
+     Conectar com numero de telefone > digite o codigo
+     (o aparelho vai aparecer como "Android" na lista - e esperado,
+     faz parte de como o pareamento por codigo funciona)
+  4) a pagina avisa sozinha quando conectar, E mostra o SESSION ID
+     (tambem chega no seu proprio WhatsApp)
+
+
+SESSION ID
+----------
+  Depois de conectar, alem de gravar a sessao em disco, o site:
+    - manda o session id pro seu proprio chat do WhatsApp
+    - mostra ele na propria pagina (clique pra copiar)
+
+  Formato: XAVIER~<...> — COMPATIVEL com o site de pareamento do inrl e
+  com o XAVIER-MD (.getsession) - um id gerado em qualquer um dos tres
+  funciona nos outros.
+
+  Sem GITHUB_TOKEN: sai um id LONGO (a sessao inteira comprimida dentro da
+  propria mensagem) - funciona igual, so fica grande.
+
+  Com GITHUB_TOKEN (token classic, so precisa do escopo "gist"): sai um id
+  CURTO (~40 caracteres) - a sessao vai pra um Gist SECRETO do GitHub e o
+  id e so a referencia.
+
+      GITHUB_TOKEN=ghp_xxxxxxxxxxxx npm start
+
+
+ONDE A SESSAO E GRAVADA
+-----------------------
+  Por padrao em:   ./sessao/baileys/
+
+  Depois de conectar, copie essa pasta para o bot, em:
+      database/baileys/
+  (ou cole o session id direto no SESSION_ID do config.env do bot, sem
+  precisar copiar pasta nenhuma)
+
+  Se o site estiver rodando na MESMA maquina do bot, da pra gravar direto
+  na pasta dele e nao copiar nada:
+
+      PASTA_SESSAO=/caminho/do/bot/database/baileys npm start
+
+
+ABRIR PRA INTERNET (VPS)
+------------------------
+  Quem abre essa pagina consegue parear um numero na sessao gerada. Por
+  isso, SEM senha configurada o servidor escuta so em localhost, e nao da
+  pra acessar de fora da maquina.
+
+  Pra abrir pra internet, defina uma senha:
+
+      PAREAMENTO_TOKEN=suasenha npm start
+
+  e acesse:  http://SEU-IP:3000/?token=suasenha
+
+
+VARIAVEIS
+---------
+  PAREAMENTO_PORTA   porta do site               (padrao: 3000)
+  PAREAMENTO_TOKEN   senha de acesso             (padrao: vazio = so localhost)
+  PASTA_SESSAO       onde gravar a sessao        (padrao: ./sessao/baileys)
+  GITHUB_TOKEN       pra session id curto (Gist) (padrao: vazio = id longo)
+
+  Da pra preencher essas 4 de duas formas (pode misturar):
+
+  1) config.js — abra o arquivo e preencha direto, sem precisar digitar
+     nada na hora de rodar:
+
+         module.exports = {
+           GITHUB_TOKEN: 'ghp_xxxxxxxxxxxx',
+           PAREAMENTO_PORTA: 3000,
+           PAREAMENTO_TOKEN: '',
+           PASTA_SESSAO: '',
+         }
+
+     depois so: npm start
+
+  2) variavel de ambiente / .env — como nos exemplos acima
+     (GITHUB_TOKEN=ghp_xxx npm start). Se a MESMA variavel estiver nos
+     dois lugares, a de ambiente ganha (util pra testar algo pontual sem
+     mexer no config.js).
+
+
+OBSERVACAO
+----------
+  Gerar um codigo novo APAGA a sessao que estiver na pasta e cria outra.
+  E limitacao do protocolo: o codigo so pode ser pedido por uma sessao
+  ainda nao registrada.
