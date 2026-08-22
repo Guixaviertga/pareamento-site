@@ -106,3 +106,36 @@ OBSERVACAO
   Gerar um codigo novo APAGA a sessao que estiver na pasta e cria outra.
   E limitacao do protocolo: o codigo so pode ser pedido por uma sessao
   ainda nao registrada.
+
+
+API DE IMAGEM PRO XAVIER-MD (canvafy / @napi-rs/canvas)
+---------------------------------------------------------
+  O bot NAO instala mais canvafy/@napi-rs/canvas (motivo: sao as unicas
+  dependencias com binario nativo do bot - em Termux/Pterodactyl ARM64 sao
+  a maior fonte de dor de cabeca pra instalar). Esse site virou a API que
+  gera as imagens; o bot so chama por HTTP.
+
+  Rotas (POST, corpo JSON, precisa do MESMO PAREAMENTO_TOKEN no campo
+  "token" do corpo - se o site nao tiver token configurado, qualquer
+  valor passa):
+
+    POST /api/welcome-card
+      body: { token, avatarUrl, tipo: "add"|"remove", titulo, descricao,
+              fundoUrls?: [...] }
+      resp: { imagem: "<base64 PNG>" }
+
+    POST /api/gfx
+      body: { token, texto, texto2?, template?: numero, fonte? }
+      resp: { imagem: "<base64 PNG>" }
+      (templates ficam em midia/gfx/, fontes em midia/fontes/ - mesmo
+      esquema do bot: joga arquivo na pasta, nao precisa mexer em codigo)
+
+    POST /api/figurinha-texto
+      body: { token, texto, fonte?, animado: true|false }
+      resp: { frames: ["<base64 PNG>", ...] }
+      (animado=false -> 1 frame (ttp); animado=true -> varios quadros
+      pro bot montar o WebP animado com ffmpeg - o encode em si continua
+      no bot, so o DESENHO do texto saiu de la)
+
+  Configuracao no lado do BOT (config.env dele): PAREAMENTO_API_URL
+  apontando pra URL deste site, e PAREAMENTO_TOKEN igual ao daqui.
